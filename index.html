@@ -1,13 +1,13 @@
 <!DOCTYPE HTML>
 <html lang="en-US">
    <head>
-       <script async src="https://www.googletagmanager.com/gtag/js?id=G-DV7SM4LPKG"></script>
+       <script async src="https://www.googletagmanager.com/gtag/js?id=G-L26R0VRH0L"></script>
        <script>
        window.dataLayer = window.dataLayer || [];
        function gtag(){dataLayer.push(arguments);}
        gtag('js', new Date());
 
-       gtag('config', 'G-DV7SM4LPKG');
+       gtag('config', 'G-L26R0VRH0L');
        </script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
@@ -22,7 +22,7 @@
             });
         </script>
 
-       <title>Overbet.ai</title>
+       <title>Hold'LLM</title>
        <link rel="icon" type="image/png" href="https://overbet.ai/logo_small.png">
        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
        <style>
@@ -36,9 +36,53 @@
            }
            
            .header {
-               text-align: center;
-               padding: 20px;
-           }
+            display: flex;
+            align-items: center;
+            padding: 15px 40px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+
+            .header img {
+                height: 72px;
+                width: auto;
+            }
+
+            .nav-links {
+                margin-left: auto;
+                display: flex;
+            }
+
+            .nav-links img {
+                height: 20px;
+                width: auto;
+                vertical-align: middle;
+            }
+
+            .nav-links a, footer a {
+                color: #425B76;
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 18px;
+                transition: color 0.2s ease;  /* This is the transition effect */
+            }
+
+            .nav-links {
+                margin-left: auto;
+                display: flex;
+                align-items: center;  /* This will vertically center all items */
+                gap: 10px;  /* This adds equal spacing between all items */
+            }
+
+            .nav-links img {
+                height: 20px;  /* Adjust this value to make the image smaller */
+                width: auto;
+                vertical-align: middle;
+            }
+
+            .nav-links a:hover, footer a:hover {
+            color: #2B6D5E;
+            }
 
            .hero-section {
                background-color: #425B76;
@@ -268,13 +312,20 @@
      <link rel="stylesheet" crossorigin href="./assets/main-CVK9YUAx.css">
    </head>
    <body>
-       <div class="header">
-           <img src="https://overbet.ai/logo.png" width="366" height="71" alt="Overbet.ai Logo">
-       </div>
+    <div class="header">
+        <a href="https://holdllm.com">
+            <img src="./assets/logo_head2-Cuy3vPAQ.png" alt="Hold'LLM Logo">
+        </a>
+        <nav class="nav-links">
+            <a href="about.html">About</a>
+            <img src="./assets/logo_ps-BwDc0HAL.png">
+            <a href="https://overbet.ai">Overbet.ai</a>
+        </nav>
+    </div>
 
        <div class="hero-section">
            <div class="main-content">
-               <h1>Texas Hold'LLM</h1>
+               <h1>Feature Table</h1>
                <div class="layout">
                     <div id="visualization-container"></div>
                     <div id="debug-container"></div>
@@ -282,53 +333,7 @@
            </div>
        </div>
 
-       <div class="signup-section">
-           <h2>Think you could do better?</h2>
-           <!-- <p>Check out the prompts that we used here. Think you could do better? </p> -->
-           <p>Sign up to get notified when we launch!</p>
-           <!-- <div style="position: relative; width: 480px; height: 70px; overflow: hidden;">
-            <iframe
-              src="https://overbetai.substack.com/embed"
-              width="480"
-              height="320"
-              style="border: 1px solid #EEE; background: white; position: relative; top: -170px;"
-              frameborder="0"
-              scrolling="no"
-            ></iframe>
-          </div> -->
-           <iframe src="https://overbetai.substack.com/embed" width="480" height="150" style="border:1px solid #EEE; background:white;" frameborder="0" scrolling="no"></iframe>
-
-       <div class="grid-container">
-           <div class="grid-item">
-               <div class="icon-container">
-                   <i class="fas fa-solid fa-diamond icon-color"></i>
-               </div>
-               <h3>Cards to Code</h3>
-               <p>Build your first AI poker bot and learn the fundamentals of game theory</p>
-               <a href="#" class="button">Go (soon)</a>
-               <!-- <a href="https://cardstocode.com" class="button">Go</a> -->
-           </div>
-           <div class="grid-item">
-               <div class="icon-container">
-                   <i class="fas fa-solid fa-brain icon-color"></i>
-               </div>
-               <h3>RPS Opponent Modeling</h3>
-               <p>Master opponent modeling through the classic game of rock paper scissors</p>
-               <a href="#" class="button">Go (soon)</a>
-               <!-- <a href="https://rps.bot" class="button">Go</a> -->
-           </div>
-           <div class="grid-item">
-               <div class="icon-container">
-                   <i class="fas fa-regular fa-hand-back-fist icon-color"></i>
-               </div>
-               <h3>Daily RPS Challenge</h3>
-               <p>Test your skills in our daily rock paper scissors challenge</p>
-               <a href="#" class="button">Play (soon)</a>
-               <!-- <a href="https://overbet.ai/daily" class="button">Play</a> -->
-           </div>
-       </div>
-
-       <footer>© 2024 Overbet.ai</footer>
+       <footer>© 2024 <a href="https://overbet.ai">Overbet.ai</a></footer>
 
    </body>
 </html>
