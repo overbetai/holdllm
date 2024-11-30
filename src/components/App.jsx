@@ -41,6 +41,11 @@ export function App() {
         
                 if ('hands' in parsedMsg) {
                     if (parsedMsg.street === 0 && parsedMsg.action_history_by_street[0].length === 0) {
+                        // Add spacing before new hand
+                        const spacingElement = document.createElement('div');
+                        spacingElement.style.height = '0.7em';
+                        debugContainer.appendChild(spacingElement);
+
                         const positions = getPositions(parsedMsg.dealer_button);
         
                         const headerElement = document.createElement('div');
@@ -96,6 +101,18 @@ export function App() {
                         bbPost.appendChild(bbName);
                         bbPost.appendChild(document.createTextNode(' posts big blind $10'));
                         debugContainer.appendChild(bbPost);
+
+                        // Check scroll position after all hand start elements are added
+                        const isAtBottom =
+                            debugContainer.scrollHeight - debugContainer.scrollTop <=
+                            debugContainer.clientHeight + 200;
+
+                        if (isAtBottom) {
+                            requestAnimationFrame(() => {
+                                debugContainer.scrollTop = debugContainer.scrollHeight;
+                            });
+                        }
+                        return;
                     }
         
                     if (parsedMsg.street > 0 && parsedMsg.action_history_by_street[parsedMsg.street].length === 0) {
@@ -156,22 +173,26 @@ export function App() {
                 msgElement.style.opacity = "0.3";
                 msgElement.textContent = msg;
             }
+        
+            // Only check scroll position for non-hand-start messages
+            if (!msgElement.textContent.includes('*** HOLE CARDS ***')) {
+                const isAtBottom =
+                    debugContainer.scrollHeight - debugContainer.scrollTop <=
+                    debugContainer.clientHeight + 200;
 
-            // Check if we're near the bottom before adding the new element
-            const isAtBottom =
-                debugContainer.scrollHeight - debugContainer.scrollTop <=
-                debugContainer.clientHeight + 200;
+                // Add the new message
+                debugContainer.appendChild(msgElement);
 
-            // Add the new message
-            debugContainer.appendChild(msgElement);
-
-            // Only scroll if we were already at the bottom
-            if (isAtBottom) {
-                requestAnimationFrame(() => {
-                    debugContainer.scrollTop = debugContainer.scrollHeight;
-                });
+                // Only scroll if we were already at the bottom
+                if (isAtBottom) {
+                    requestAnimationFrame(() => {
+                        debugContainer.scrollTop = debugContainer.scrollHeight;
+                    });
+                }
+            } else {
+                debugContainer.appendChild(msgElement);
             }
-        }
+        }        
 
         socket.on('connect', () => {
             appendMessage('Connected to server');
