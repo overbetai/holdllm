@@ -201,9 +201,11 @@ export function App() {
         return () => socket.disconnect();
     }, []);
 
-    return <GameTable 
-        gameState={gameState} 
-        payoffs={payoffs}
-        cumulativePayoffs={cumulativePayoffs}
-    />;
+    return (
+        <GameTable 
+            gameState={gameState} 
+            payoffs={payoffs}
+            cumulativePayoffs={cumulativePayoffs}
+        />
+    );
 }

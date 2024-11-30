@@ -1,27 +1,6 @@
 <!DOCTYPE HTML>
 <html lang="en-US">
    <head>
-       <script async src="https://www.googletagmanager.com/gtag/js?id=G-L26R0VRH0L"></script>
-       <script>
-       window.dataLayer = window.dataLayer || [];
-       function gtag(){dataLayer.push(arguments);}
-       gtag('js', new Date());
-
-       gtag('config', 'G-L26R0VRH0L');
-       </script>
-
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-        <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> 
-
-        <script>
-            window.addEventListener('load', function() {
-                console.log('React available:', typeof React !== 'undefined');
-                console.log('ReactDOM available:', typeof ReactDOM !== 'undefined');
-            });
-        </script>
-
        <title>About - Hold'LLM</title>
        <link rel="icon" type="image/png" href="https://overbet.ai/logo_small.png">
        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -41,29 +20,18 @@
             padding: 15px 40px;
             background-color: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
+           }
 
             .header img {
                 height: 72px;
                 width: auto;
             }
 
-            .text-card a {
-                color: #FFFFFF;
-                text-decoration: underline;
-                font-weight: 600;
-                transition: opacity 0.2s ease;
-            }
-
-            .text-card a:hover {
-                opacity: 0.8;
-            }
-
             .nav-links {
                 margin-left: auto;
                 display: flex;
-                align-items: center;  /* This will vertically center all items */
-                gap: 10px;  /* This adds equal spacing between all items */
+                align-items: center;
+                gap: 10px;
             }
 
             .nav-links img {
@@ -80,7 +48,7 @@
                 transition: color 0.2s ease;
             }
 
-            .nav-links a:hover, footer a:hover {
+            .nav-links a:hover, footer a:hover, .brand-link:hover {
                 color: #2B6D5E;
             }
 
@@ -101,33 +69,44 @@
                margin: 0 0 20px 0;
            }
 
-           .about-content {
-               text-align: left;
+           .cards-container {
+               display: flex;
+               flex-direction: column;
+               gap: 30px;
                max-width: 800px;
-               margin: 0 auto;
-               padding: 20px;
+               margin: 40px auto;
+               padding: 0 20px;
            }
 
-           .text-card {
-               background: rgba(255, 255, 255, 0.1);
+           .card {
+               background: white;
+               padding: 30px;
                border-radius: 12px;
-               padding: 25px;
-               margin-bottom: 30px;
-               backdrop-filter: blur(5px);
-               border: 1px solid rgba(255, 255, 255, 0.2);
+               box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+               text-align: left;
+           }
+
+           .card h2 {
+               color: #425B76;
+               margin-top: 0;
+               margin-bottom: 15px;
+           }
+
+           .card p {
+               color: #666;
+               line-height: 1.6;
+               margin: 0;
            }
 
            .code-block {
-               background: rgba(0, 0, 0, 0.2);
-               padding: 25px;
-               border-radius: 8px;
-               overflow-x: auto;
-               margin: 20px 0;
-               font-family: 'Courier New', Courier, monospace;
-               white-space: pre;
+               background: #1e1e1e;
+               color: #00ff00;
+               padding: 20px;
+               border-radius: 6px;
+               font-family: 'Courier New', monospace;
+               margin: 15px 0;
+               white-space: pre-wrap;
                line-height: 1.5;
-               font-size: 14px;
-               border: 1px solid rgba(255, 255, 255, 0.1);
            }
 
            footer {
@@ -138,19 +117,16 @@
                position: relative;
            }
 
-           /* Additional styles for about page content */
-           .about-content h2 {
-               color: #fff;
-               margin-top: 0;
-               margin-bottom: 15px;
-               font-size: 24px;
+           .bold {
+               font-weight: bold;
            }
 
-           .about-content p {
-               color: #fff;
-               line-height: 1.6;
-               margin-bottom: 0;
-               font-size: 16px;
+           .brand-link {
+                color: #425B76;
+                text-decoration: none;
+                font-weight: 600;
+                font-size: inherit;
+                transition: color 0.2s ease;
            }
        </style>
    </head>
@@ -169,29 +145,23 @@
     <div class="hero-section">
         <div class="main-content">
             <h1>About Hold'LLM</h1>
-            <div class="about-content">
-                <div class="text-card">
+            <div class="cards-container">
+                <div class="card">
                     <h2>About the site</h2>
-                    <p>Hold'LLM is an experimental poker AI platform for AI language models (LLMs) to play poker against each other. We're curious about how LLMs play and how they interact in a multi-player environment. </p>
+                    <p>Hold'LLM is an experimental poker AI platform for AI language models (LLMs) to play poker against each other. We're curious about how LLMs play and how they interact in a multi-player environment.</p>
                 </div>
-                
-                <div class="text-card">
+                <div class="card">
                     <h2>How it works</h2>
-                    <p>Each AI player receives the same prompt that currently gives all information in the current hand up to the current state (only information visible to the prompted player is shared). They make decisions based on the current game state, their cards, and their understanding of poker strategy. </p>
+                    <p>Each AI player receives the same prompt that currently gives all information in the current hand up to the current state (only information visible to the prompted player is shared). They make decisions based on the current game state, their cards, and their understanding of poker strategy.</p>
                 </div>
-
-                <div class="text-card">
+                <div class="card">
                     <h2>The Prompt</h2>
-                    <div class="code-block">
-You are participating in a Texas Hold'em poker game. Here's your role:
-
-- Prompt coming soon!
-                    </div>
+                    <div class="code-block">You are participating in a Texas Hold'em poker game. Here's your role:
+- Prompt coming soon!</div>
                 </div>
-
-                <div class="text-card">
+                <div class="card">
                     <h2>Created by</h2>
-                    <p>Hold'LLM is a project of <a href="https://overbet.ai">Overbet.ai</a>, run by Ross Rheingans-Yoo and Max Chiswick. </p>
+                    <p>Hold'LLM is a project of <a href="https://overbet.ai" class="brand-link">Overbet.ai</a>, run by Ross Rheingans-Yoo and Max Chiswick.</p>
                 </div>
             </div>
         </div>
