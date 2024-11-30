@@ -11,7 +11,8 @@ const PromptContainer = () => {
         background: '#f5f5f5',
         border: '1px solid #ddd',
         borderBottom: 'none',
-        borderRadius: '4px 4px 0 0'
+        borderRadius: '4px 4px 0 0',
+        color: '#000'  // Add this to ensure black text on all devices
     };
 
     const activeTabStyle = {

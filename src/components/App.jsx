@@ -156,19 +156,22 @@ export function App() {
                 msgElement.style.opacity = "0.3";
                 msgElement.textContent = msg;
             }
-        
+
+            // Check if we're near the bottom before adding the new element
             const isAtBottom =
                 debugContainer.scrollHeight - debugContainer.scrollTop <=
                 debugContainer.clientHeight + 200;
-        
+
+            // Add the new message
             debugContainer.appendChild(msgElement);
-        
-            requestAnimationFrame(() => {
-                if (isAtBottom) {
+
+            // Only scroll if we were already at the bottom
+            if (isAtBottom) {
+                requestAnimationFrame(() => {
                     debugContainer.scrollTop = debugContainer.scrollHeight;
-                }
-            });
-        }        
+                });
+            }
+        }
 
         socket.on('connect', () => {
             appendMessage('Connected to server');
