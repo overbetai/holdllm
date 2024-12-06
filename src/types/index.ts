@@ -41,6 +41,8 @@ export interface PlayerProps {
     isLive: boolean
     isDealer: boolean
     playerClass: string
+    isMovingToPot: boolean;
+    isMovingToWinner: boolean;
 }
 
 export interface TableCenterProps {
@@ -48,4 +50,11 @@ export interface TableCenterProps {
     street: number
     pot: number
     prevStreetPot: number
+    isMovingToPot: boolean;
+    isMovingToWinner: boolean;
+}
+
+export interface CSSProperties extends React.CSSProperties {
+    '--winner-x'?: string;
+    '--winner-y'?: string;
 }

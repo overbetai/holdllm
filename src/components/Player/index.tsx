@@ -1,19 +1,29 @@
 import React from 'react';
-
-import { PlayerProps } from '../../types';
+import { PlayerProps, CSSProperties } from '../../types';
 import { PokerCard } from '../common/PokerCard';
 import { BetStack } from '../common/BetStack';
 import { DealerButton } from './DealerButton';
 
-export const Player = ({ 
-    index, name, stack, sessionDelta, position, 
-    cards, displayedBet, displayedExtraBet, isActive, isLive, isDealer, playerClass 
+export const Player = ({
+    index,
+    name,
+    stack,
+    sessionDelta,
+    position,
+    cards,
+    displayedBet,
+    displayedExtraBet,
+    isActive,
+    isLive,
+    isDealer,
+    playerClass,
+    isMovingToPot,
+    isMovingToWinner
 }: PlayerProps) => {
     const isLeftToRight = (index === 0 || index === 3);
 
     return (
         <>
-            {/* Player Info Box */}
             <div className={`player-info ${playerClass}`} style={{
                 left: position.info.left,
                 top: position.info.top,
@@ -26,7 +36,6 @@ export const Player = ({
                 </div>
             </div>
 
-            {/* Player Cards */}
             <div className={`player-cards ${isLive ? '' : 'player-cards-not-live'}`} style={{
                 left: position.cards.left,
                 top: position.cards.top,
@@ -44,29 +53,34 @@ export const Player = ({
                     <PokerCard key={cardIdx} card={card} />
                 ))}
 
-                <div className="player-bet" style={{
+                <div className={`player-bet ${
+                    isMovingToPot ? 'bet-stack-to-pot' : 
+                    isMovingToWinner ? 'bet-stack-to-winner' : ''
+                }`} style={{
                     top: "70%",
                     left: isLeftToRight ? "auto" : -20,
                     right: isLeftToRight ? -48 : "auto",
                     transform: "translateX(-50%) translateY(-50%)",
-                }}>
-                    <BetStack 
-                        amount={displayedBet}
-                    />
+                    '--winner-x': `calc(${position.info.left} - 50%)`,
+                    '--winner-y': `calc(${position.info.top} - 50%)`,
+                } as CSSProperties}>
+                    <BetStack amount={displayedBet} />
                 </div>
 
-                <div className="player-bet" style={{
+                <div className={`player-bet ${
+                    isMovingToPot ? 'bet-stack-to-pot' : 
+                    isMovingToWinner ? 'bet-stack-to-winner' : ''
+                }`} style={{
                     top: "70%",
                     left: isLeftToRight ? "auto" : -52,
                     right: isLeftToRight ? -80 : "auto",
                     transform: "translateX(-50%) translateY(-50%)",
-                }}>
-                    <BetStack 
-                        amount={displayedExtraBet}
-                    />
+                    '--winner-x': `calc(${position.info.left} - 50%)`,
+                    '--winner-y': `calc(${position.info.top} - 50%)`,
+                } as CSSProperties}>
+                    <BetStack amount={displayedExtraBet} />
                 </div>
             </div>
-            
         </>
     );
 };

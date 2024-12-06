@@ -121,6 +121,7 @@ footer {
     position: relative;
     width: 28px;
     height: 28px;
+    transition: transform 250ms ease-out;
 }
 
 .bet-stack-text {
@@ -129,6 +130,22 @@ footer {
     font-size: 14px;
     font-weight: bold;
     white-space: nowrap;
+}
+
+.bet-stack-to-pot {
+    transform: translate(-50%, -200px) !important;
+}
+
+.bet-stack-to-winner {
+    transform: translate(var(--winner-x), var(--winner-y)) !important;
+}
+
+.pot-stack {
+    transition: transform 250ms ease-out;
+}
+
+.player-bet {
+    transition: opacity 200ms ease-out;
 }
 
 .poker-card {

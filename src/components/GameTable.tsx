@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { Card } from '../types';
 import { Player } from './Player';
 import { TableCenter } from './TableCenter';
@@ -21,12 +20,19 @@ interface GameTableProps {
     } | null;
     payoffs: number[] | undefined;
     cumulativePayoffs: number[];
+    isMovingToPot: boolean;
+    isMovingToWinner: boolean;
 }
 
-export const GameTable = ({ gameState, payoffs, cumulativePayoffs }: GameTableProps) => {
+export const GameTable = ({ 
+    gameState, 
+    payoffs, 
+    cumulativePayoffs,
+    isMovingToPot,
+    isMovingToWinner 
+}: GameTableProps) => {
     if (!gameState) return null;
 
-    // Calculate remaining chips for each player
     const remainingChips = (gameState.starting_stack || []).map((stack, index) => {
         const paidPrevious = (gameState.chips_paid_previous_streets || [])[index] || 0;
         const paidThis = (gameState.chips_paid_this_street || [])[index] || 0;
@@ -42,12 +48,9 @@ export const GameTable = ({ gameState, payoffs, cumulativePayoffs }: GameTablePr
         winner: gameState.winner_index
     };
 
-
     const positions = calculatePlayerPositions(handInfo.players);
-
     const isPayoffState = payoffs !== undefined;
 
-    // Calculate pot values
     const totalPot = (
         (gameState.chips_paid_previous_streets || []).reduce((sum, chips) => sum + chips, 0)
         + (gameState.chips_paid_this_street || []).reduce((sum, chips) => sum + chips, 0)
@@ -69,6 +72,8 @@ export const GameTable = ({ gameState, payoffs, cumulativePayoffs }: GameTablePr
                             street={gameState.street}
                             pot={totalPot}
                             prevStreetPot={prevStreetPot}
+                            isMovingToPot={isMovingToPot}
+                            isMovingToWinner={isMovingToWinner}
                         />
 
                         {positions.map((pos, i) => (
@@ -86,6 +91,8 @@ export const GameTable = ({ gameState, payoffs, cumulativePayoffs }: GameTablePr
                                 isLive={gameState.player_live[i]}
                                 isDealer={gameState.dealer_button === i}
                                 playerClass={PLAYER_CLASS[i]}
+                                isMovingToPot={isMovingToPot}
+                                isMovingToWinner={isMovingToWinner}
                             />
                         ))}
                     </div>
@@ -110,7 +117,6 @@ const calculatePlayerPositions = (numPlayers) => {
         const aInner = 38;
         const bInner = 32;
 
-        // Adjust bet offsets for diagonal positions
         let betOffset;
         if (i === 0) {      // NW
             betOffset = { x: 10, y: 10 };

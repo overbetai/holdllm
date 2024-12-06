@@ -9,6 +9,9 @@ export function App() {
     const [gameState, setGameState] = useState(null);
     const [payoffs, setPayoffs] = useState(undefined);
     const [cumulativePayoffs, setCumulativePayoffs] = useState([0, 0, 0, 0]);
+    const [pendingPayoffs, setPendingPayoffs] = useState(null);
+    const [isMovingToPot, setIsMovingToPot] = useState(false);
+    const [isMovingToWinner, setIsMovingToWinner] = useState(false);
 
     useEffect(() => {
         const socket = io('https://staff-dev1.poker.camp:8001');
@@ -33,12 +36,32 @@ export function App() {
             return v + (total ? ` $${total}` : '');
         }
 
+        function handleStreetEnd() {
+            setIsMovingToPot(true);
+            setTimeout(() => {
+                setIsMovingToPot(false);
+                if (pendingPayoffs) {
+                    setTimeout(() => {
+                        setIsMovingToWinner(true);
+                        setTimeout(() => {
+                            setPayoffs(pendingPayoffs);
+                            setCumulativePayoffs(prev =>
+                                prev.map((payoff, i) => payoff + (pendingPayoffs[i] || 0))
+                            );
+                            setPendingPayoffs(null);
+                            setIsMovingToWinner(false);
+                        }, 300);
+                    }, 100);
+                }
+            }, 300);
+        }
+
         function appendMessage(msg) {
             const msgElement = document.createElement('div');
             try {
                 const parsedMsg = JSON.parse(msg);
                 console.log(parsedMsg);
-        
+
                 if ('hands' in parsedMsg) {
                     if (parsedMsg.street === 0 && parsedMsg.action_history_by_street[0].length === 0) {
                         // Add spacing before new hand
@@ -101,54 +124,38 @@ export function App() {
                         bbPost.appendChild(bbName);
                         bbPost.appendChild(document.createTextNode(' posts big blind $10'));
                         debugContainer.appendChild(bbPost);
-
-                        // Check scroll position after all hand start elements are added
-                        const isAtBottom =
-                            debugContainer.scrollHeight - debugContainer.scrollTop <=
-                            debugContainer.clientHeight + 200;
-
-                        if (isAtBottom) {
-                            requestAnimationFrame(() => {
-                                debugContainer.scrollTop = debugContainer.scrollHeight;
-                            });
-                        }
-                        return;
                     }
-        
-                    if (parsedMsg.street > 0 && parsedMsg.action_history_by_street[parsedMsg.street].length === 0) {
-                        const streetNames = ['PREFLOP', 'FLOP', 'TURN', 'RIVER'];
-                        const streetCards = parsedMsg.board[parsedMsg.street - 1] || [];
-        
-                        msgElement.appendChild(document.createTextNode(`\n*** ${streetNames[parsedMsg.street]} *** [`));
-        
-                        const cardContainer = document.createElement('span');
-                        const root = ReactDOM.createRoot(cardContainer);
-                        root.render(
-                            <React.Fragment>
-                                {streetCards.map((card, i) => (
-                                    <React.Fragment key={i}>
-                                        {i === 0 ? '' : ' '}
-                                        <TextCard card={card} />
-                                    </React.Fragment>
-                                ))}
-                            </React.Fragment>
-                        );
-                        msgElement.appendChild(cardContainer);
-                        msgElement.appendChild(document.createTextNode(']\n'));
-                    }
+
+                    setPayoffs(undefined);
+                    setPendingPayoffs(null);
+                    setGameState(parsedMsg);
+                    setIsMovingToPot(false);
+                    setIsMovingToWinner(false);
                 } else if ('actor' in parsedMsg) {
+                    // Check if this action ends the street
+                    const currentStreet = gameState?.street || 0;
+                    const isStreetEnd = parsedMsg.street !== currentStreet;
+                    
+                    if (isStreetEnd) {
+                        handleStreetEnd();
+                    }
+
                     const b = document.createElement('b');
                     b.className = PLAYER_CLASS[parsedMsg.actor];
                     b.textContent = PLAYER_SHORT_NAMES[parsedMsg.actor];
                     msgElement.appendChild(b);
                     msgElement.appendChild(document.createTextNode(` ${formatAction(parsedMsg.action.verb, parsedMsg.action.total)}`));
+                    
+                    if (parsedMsg.action.verb.toLowerCase() === 'call' && pendingPayoffs) {
+                        handleStreetEnd();
+                    }
                 } else if ('payoffs' in parsedMsg) {
                     msgElement.appendChild(document.createTextNode('\n*** RESULTS ***\n'));
                     const sortedPayoffs = parsedMsg.payoffs
                         .map((payoff, i) => ({ payoff, index: i }))
                         .filter(p => p.payoff !== 0)
                         .sort((a, b) => b.payoff - a.payoff);
-        
+
                     sortedPayoffs.forEach(({ payoff, index }) => {
                         const b = document.createElement('b');
                         b.className = PLAYER_CLASS[index];
@@ -157,42 +164,31 @@ export function App() {
                         msgElement.appendChild(document.createTextNode(`: ${payoff > 0 ? '+$' : '-$'}${Math.abs(payoff)}\n`));
                     });
                     msgElement.appendChild(document.createTextNode('\n'));
-                }
-        
-                if ('hands' in parsedMsg) {
-                    setPayoffs(undefined);
-                    setGameState(parsedMsg);
-                } else if ('payoffs' in parsedMsg) {
-                    setPayoffs(parsedMsg.payoffs);
-                    setCumulativePayoffs(prev =>
-                        prev.map((payoff, i) => payoff + (parsedMsg.payoffs[i] || 0))
-                    );
+
+                    const lastAction = gameState?.action_history_by_street?.[gameState.street]?.slice(-1)?.[0];
+                    if (lastAction?.verb.toLowerCase() === 'call') {
+                        setPendingPayoffs(parsedMsg.payoffs);
+                    } else {
+                        setPayoffs(parsedMsg.payoffs);
+                        setCumulativePayoffs(prev =>
+                            prev.map((payoff, i) => payoff + (parsedMsg.payoffs[i] || 0))
+                        );
+                    }
                 }
             } catch (e) {
                 console.log(msg);
                 msgElement.style.opacity = "0.3";
                 msgElement.textContent = msg;
             }
-        
-            // Only check scroll position for non-hand-start messages
-            if (!msgElement.textContent.includes('*** HOLE CARDS ***')) {
-                const isAtBottom =
-                    debugContainer.scrollHeight - debugContainer.scrollTop <=
-                    debugContainer.clientHeight + 200;
 
-                // Add the new message
-                debugContainer.appendChild(msgElement);
-
-                // Only scroll if we were already at the bottom
-                if (isAtBottom) {
-                    requestAnimationFrame(() => {
-                        debugContainer.scrollTop = debugContainer.scrollHeight;
-                    });
-                }
-            } else {
-                debugContainer.appendChild(msgElement);
+            debugContainer.appendChild(msgElement);
+            const isAtBottom = debugContainer.scrollHeight - debugContainer.scrollTop <= debugContainer.clientHeight + 200;
+            if (isAtBottom) {
+                requestAnimationFrame(() => {
+                    debugContainer.scrollTop = debugContainer.scrollHeight;
+                });
             }
-        }        
+        }
 
         socket.on('connect', () => {
             appendMessage('Connected to server');
@@ -223,13 +219,15 @@ export function App() {
         });
 
         return () => socket.disconnect();
-    }, []);
+    }, [gameState, pendingPayoffs]);
 
     return (
         <GameTable 
             gameState={gameState} 
             payoffs={payoffs}
             cumulativePayoffs={cumulativePayoffs}
+            isMovingToPot={isMovingToPot}
+            isMovingToWinner={isMovingToWinner}
         />
     );
 }
