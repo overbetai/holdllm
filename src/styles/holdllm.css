@@ -22,8 +22,7 @@ footer {
     grid-template-columns: 1fr;
     grid-template-areas:
         "visualization"
-        "prompt"
-        "debug";
+        "prompt";
     gap: 20px;
     padding: 10px;
 }
@@ -32,16 +31,13 @@ footer {
     .layout {
         grid-template-columns: 2.5fr 1fr;
         height: 650px;
-        grid-template-rows: 33fr 67fr;
         grid-template-areas:
-            "visualization prompt"
-            "visualization debug";
+            "visualization prompt";
         gap: 20px;
     }
 
     #visualization-container {
         grid-area: visualization;
-        grid-row: span 2;
     }
 }
 
@@ -55,15 +51,12 @@ footer {
 }
 
 #debug-container {
-    grid-area: debug;
+    height: 100%;
     box-sizing: border-box;
     color: black;
     text-align: left;
     font-family: monospace;
     white-space: pre-wrap;
-    padding: 10px;
-    background-color: #f5f5f5;
-    border: 1px solid #ddd;
     overflow-y: auto;
 }
 
